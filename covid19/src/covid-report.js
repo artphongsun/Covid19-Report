@@ -9,24 +9,30 @@ import moment from 'moment';
 const CovidReport = () => {
   const [data, setData] = useState({});
   const [filteredData, setFilteredData] = useState();
+  const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(`https://api.covid19api.com/summary`);
-      setData(response.data);
-      setFilteredData(
-        response.data.Countries.map((item) => ({
+      setData({
+        ...response.data,
+        Countries: response.data.Countries.map((item) => ({
           ...item,
+          key: item.ID,
           TotalConfirmedCleaned: item.TotalConfirmed || 'unreported',
           TotalDeathsCleaned: item.TotalDeaths || 'unreported',
           TotalRecoveredCleaned: item.TotalRecovered || 'unreported',
-        }))
-      );
+        })),
+      });
       setLoading(false);
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    setFilteredData(data?.Countries?.filter((item) => item.Country.toLowerCase().includes(search.toLowerCase())));
+  }, [search, data]);
 
   const columns = [
     {
@@ -85,13 +91,7 @@ const CovidReport = () => {
             <strong>Last Updated: </strong>
             {moment(data?.Global?.Date).format('MMMM Do YYYY, h:mm:ss a')}
           </TimeContainer>
-          <StyledInput
-            placeholder='Search Country'
-            prefix={<SearchOutlined />}
-            onChange={(e) =>
-              setFilteredData(data.Countries.filter((item) => item.Country.toLowerCase().includes(e.target.value.toLowerCase())))
-            }
-          />
+          <StyledInput placeholder='Search Country' prefix={<SearchOutlined />} onChange={(e) => setSearch(e.target.value)} />
           <Table
             columns={columns}
             bordered
