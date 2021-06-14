@@ -78,10 +78,7 @@ const StyledCard = styled(Card)`
   @media (max-width: 600px) {
     box-shadow: 0;
     border-radius: 0;
-    overflow: scroll;
-    .ant-card-body {
-      height: 100vh;
-    }
+    overflow-x: scroll;
     .ant-card-bordered {
       border: none;
     }
