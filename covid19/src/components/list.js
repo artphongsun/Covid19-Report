@@ -35,11 +35,7 @@ export const List = ({ filteredData }) => {
 
   return (
     <Root>
-      <Table
-        columns={columns}
-        bordered
-        dataSource={filteredData && filteredData.sort((a, b) => b.TotalConfirmed - a.TotalConfirmed)}
-      />
+      <Table columns={columns} bordered dataSource={filteredData?.sort((a, b) => b.TotalConfirmed - a.TotalConfirmed)} />
     </Root>
   );
 };

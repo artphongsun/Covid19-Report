@@ -9,23 +9,27 @@ import moment from 'moment';
 
 export const CovidReport = () => {
   const [data, setData] = useState({});
-  const [filteredData, setFilteredData] = useState();
+  const [filteredData, setFilteredData] = useState([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(`https://api.covid19api.com/summary`);
-      setData({
-        ...response.data,
-        Countries: response?.data?.Countries?.map((item) => ({
-          ...item,
-          key: item.ID,
-          TotalConfirmedCleaned: item.TotalConfirmed || 'unreported',
-          TotalDeathsCleaned: item.TotalDeaths || 'unreported',
-          TotalRecoveredCleaned: item.TotalRecovered || 'unreported',
-        })),
-      });
+      try {
+        const response = await axios.get(`https://api.covid19api.com/summary`);
+        setData({
+          ...response.data,
+          Countries: response?.data?.Countries?.map((item) => ({
+            ...item,
+            key: item.ID,
+            TotalConfirmedCleaned: item.TotalConfirmed || 'unreported',
+            TotalDeathsCleaned: item.TotalDeaths || 'unreported',
+            TotalRecoveredCleaned: item.TotalRecovered || 'unreported',
+          })),
+        });
+      } catch (err) {
+        console.log(err);
+      }
       setLoading(false);
     };
     fetchData();
@@ -43,9 +47,9 @@ export const CovidReport = () => {
         ) : (
           <>
             <SummaryContainer>
-              <Box header='Total Cases' color='#808080' content={data.Global.TotalConfirmed} />
-              <Box header='Total Deaths' color='#FF0000' content={data.Global.TotalDeaths} />
-              <Box header='Total Recovered' color='#8ACA2B' content={data.Global.TotalRecovered} />
+              <Box header='Total Cases' color='#808080' content={data.Global?.TotalConfirmed} />
+              <Box header='Total Deaths' color='#FF0000' content={data.Global?.TotalDeaths} />
+              <Box header='Total Recovered' color='#8ACA2B' content={data.Global?.TotalRecovered} />
             </SummaryContainer>
             <DateContainer>
               <strong>Last Updated: </strong>
