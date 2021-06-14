@@ -1,6 +1,6 @@
 # Covid-19 Report
 
-Covid-19 Report is a web application that displays COVID-19 related data where users can view, sort, and filter the data that is fetched from the provided API [https://api.covid19api.com/summary](https://api.covid19api.com/summary.).
+Covid-19 Report is a web application that displays COVID-19 related data where users can view, sort, and filter the data that is fetched from the provided API [https://api.covid19api.com/summary](https://api.covid19api.com/summary)
 
 ## How to run the app
 
