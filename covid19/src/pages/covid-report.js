@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import 'antd/dist/antd.css';
-import { Table, Input, Card } from 'antd';
+import { Box } from '../components/box';
+import { List } from '../components/list';
+import { Input, Card } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
-const CovidReport = () => {
+export const CovidReport = () => {
   const [data, setData] = useState({});
   const [filteredData, setFilteredData] = useState();
   const [search, setSearch] = useState('');
@@ -34,36 +35,6 @@ const CovidReport = () => {
     setFilteredData(data?.Countries?.filter((item) => item.Country.toLowerCase().includes(search.toLowerCase())));
   }, [search, data]);
 
-  const columns = [
-    {
-      title: 'Country Name',
-      dataIndex: 'Country',
-      key: 'Country',
-      width: '25%',
-    },
-    {
-      title: ' Total Confirmed Cases',
-      dataIndex: 'TotalConfirmedCleaned',
-      key: 'TotalConfirmedCleaned',
-      sorter: (a, b) => a.TotalConfirmed - b.TotalConfirmed,
-      width: '25%',
-    },
-    {
-      title: 'Total Death Cases',
-      dataIndex: 'TotalDeathsCleaned',
-      key: 'TotalDeathsCleaned',
-      sorter: (a, b) => a.TotalDeaths - b.TotalDeaths,
-      width: '25%',
-    },
-    {
-      title: 'Total Recovered Cases',
-      key: 'TotalRecoveredCleaned',
-      dataIndex: 'TotalRecoveredCleaned',
-      sorter: (a, b) => a.TotalRecovered - b.TotalRecovered,
-      width: '25%',
-    },
-  ];
-
   return (
     <Root>
       {loading ? (
@@ -71,39 +42,21 @@ const CovidReport = () => {
       ) : (
         <StyledCard title={<strong>COVID-19 PANDEMIC</strong>} bordered>
           <SummaryContainer>
-            <Box>
-              <strong>
-                Total Cases <Text color='gray'>{data.Global.TotalConfirmed}</Text>
-              </strong>
-            </Box>
-            <Box>
-              <strong>
-                Total Deaths <Text color='red'>{data.Global.TotalDeaths}</Text>
-              </strong>
-            </Box>
-            <Box>
-              <strong>
-                Total Recovered <Text color='#8ACA2B'>{data.Global.TotalRecovered}</Text>
-              </strong>
-            </Box>
+            <Box header='Total Cases' color='gray' content={data.Global.TotalConfirmed} />
+            <Box header='Total Deaths' color='red' content={data.Global.TotalDeaths} />
+            <Box header='Total Recovered' color='#8ACA2B' content={data.Global.TotalRecovered} />
           </SummaryContainer>
           <TimeContainer>
             <strong>Last Updated: </strong>
             {moment(data?.Global?.Date).format('MMMM Do YYYY, h:mm:ss a')}
           </TimeContainer>
           <StyledInput placeholder='Search Country' prefix={<SearchOutlined />} onChange={(e) => setSearch(e.target.value)} />
-          <Table
-            columns={columns}
-            bordered
-            dataSource={filteredData && filteredData.sort((a, b) => b.TotalConfirmed - a.TotalConfirmed)}
-          />
+          <List filteredData={filteredData} />
         </StyledCard>
       )}
     </Root>
   );
 };
-
-export default CovidReport;
 
 const Root = styled.div`
   padding: 40px 50px;
@@ -120,24 +73,23 @@ const StyledInput = styled(Input)`
 `;
 
 const StyledCard = styled(Card)`
+  box-shadow: 0 1px 5px rgb(0 0 0 / 10%);
+  border-radius: 25px;
   @media (max-width: 600px) {
+    box-shadow: 0;
+    border-radius: 0;
+    overflow: scroll;
     .ant-card-body {
-      overflow: scroll;
       height: 100vh;
     }
     .ant-card-bordered {
       border: none;
     }
-  }
-  @media (max-width: 320px) {
-    .ant-pagination {
-      width: 125%;
+    .ant-table-pagination-right {
+      justify-content: flex-start;
+      flex-wrap: nowrap;
     }
   }
-`;
-
-const Text = styled.div`
-  color: ${(props) => props.color};
 `;
 
 const SummaryContainer = styled.div`
@@ -146,14 +98,6 @@ const SummaryContainer = styled.div`
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-`;
-
-const Box = styled.div`
-  background: #fafafa;
-  padding: 10px;
-  margin: 10px;
-  width: 300px;
-  border: 1px solid #ececec;
 `;
 
 const TimeContainer = styled.div`

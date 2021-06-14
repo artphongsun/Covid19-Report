@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import CovidReport from './covid-report';
+import 'antd/dist/antd.css';
+import { CovidReport } from './pages/covid-report';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
