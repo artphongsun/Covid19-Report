@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import { Table } from 'antd';
 
 export const List = ({ filteredData }) => {
@@ -33,10 +34,18 @@ export const List = ({ filteredData }) => {
   ];
 
   return (
-    <Table
-      columns={columns}
-      bordered
-      dataSource={filteredData && filteredData.sort((a, b) => b.TotalConfirmed - a.TotalConfirmed)}
-    />
+    <Root>
+      <Table
+        columns={columns}
+        bordered
+        dataSource={filteredData && filteredData.sort((a, b) => b.TotalConfirmed - a.TotalConfirmed)}
+      />
+    </Root>
   );
 };
+
+const Root = styled.div`
+  @media (max-width: 460px) {
+    overflow-x: scroll;
+  }
+`;
